@@ -1,0 +1,8 @@
+TURN server starting - 
+/home/ec2-user/turn/turnserver-4.5.0.6
+
+sudo bin/turnadmin -a -u bell -r entersekt.com -p ring
+
+sudo bin/turnadmin -A -u koosie -p P@55w0rd
+
+turnserver -L 34.218.93.72 -X 34.218.93.72 -E 172.16.67.61 -o -a -f -r entersekt.com

@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<link rel="stylesheet"
+	href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" />
+<link rel='stylesheet'
+	href='//cdn.jsdelivr.net/foundation/5.0.2/css/foundation.min.css' />
+<!-- Font Awesome icons (Bootstrap, Foundation, and jQueryUI also supported) -->
+<link rel='stylesheet'
+	href='//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.0.3/css/font-awesome.css' />
+<title>WebRTC Servicedesk</title>
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.0/jquery-ui.min.js"></script>
+<script
+	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+<script src="angular/angular.js"></script>
+<script src="js/fetch.js"></script>
+<script src="js/main.controller.js"></script>
+<script src="js/main.js"></script>
+
+<script>
+	mode = ANSWER_MODE;
+</script>
+<link rel="stylesheet" href="styles/style.css" />
+<link rel="stylesheet" href="styles/main.css" />
+</head>
+<body ng-app="MainModule" ng-controller="MainController" ng-init="waitForCalls()">
+	<div class="logo"></div>
+	<div class="error-box" ng-if="errorMessage"
+		ng-mouseover="showPopover()" ng-mouseleave="hidePopover()">{{
+		errorMessage.message }}</div>
+	<div class="popover" ng-show="popoverIsVisible">
+		<pre>{{ errorMessage.developerMessage }}</pre>
+	</div>
+
+	<table>
+		<tr>
+			<td colspan="2" id="callButtons" style="background-color: #ffffff; border: none;">
+				<table>
+					<tr>
+						<td style="background-color: #ffffff; border: none;">
+							<table style="border: 5px solid #126fbe">
+								<tr>
+									<td
+										style="font-size: 110px; color: #126fbe; min-width: 840px; border: none">Information</td>
+									<td style="min-width: 202px; border: none">
+										<button id="infoVideoButton" class="white-button" ng-disabled="(model.waitingCallsQueue['info']['video'] == 0)" ng-click="popAnswerWindow('info','video')">
+											<img src="images/VideoChatIcon.png" width="200" />
+										</button>
+									</td>
+									<td style="min-width: 202px; border: none">
+										<button id="infoAudioButton" class="white-button" ng-disabled="(model.waitingCallsQueue['info']['audio'] == 0)" ng-click="popAnswerWindow('info','audio')">
+											<img src="images/AudioChatIcon.png" width="200" />
+										</button>
+									</td>
+									<td style="min-width: 202px; border: none">
+										<button id="infoImButton" class="white-button" ng-disabled="(model.waitingCallsQueue['info']['im'] == 0)" ng-click="popAnswerWindow('info','im')">
+											<img src="images/ImChatIcon.png" width="200" />
+										</button>
+									</td>
+								</tr>
+								<tr style="background-color: #ffffff; border: none; height: 80px">
+									<td
+										style="font-size: 110px; color: #126fbe; min-width: 840px; border: none">&nbsp;</td>
+									<td style="font-size: 70px; color: #126fbe; text-align:center; min-width: 202px; border: none">{{model.waitingCallsQueue['info']['video']}}</td>
+									<td style="font-size: 70px; color: #126fbe; text-align:center; min-width: 202px; border: none">{{model.waitingCallsQueue['info']['audio']}}</td>
+									<td style="font-size: 70px; color: #126fbe; text-align:center; min-width: 202px; border: none">{{model.waitingCallsQueue['info']['im']}}</td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+					<tr>
+						<td style="background-color: #ffffff; border: none;">
+							<table style="border: 5px solid #126fbe">
+								<tr>
+									<td
+										style="font-size: 110px; color: #126fbe; min-width: 840px; border: none">Private
+										Banking</td>
+									<td style="min-width: 202px; border: none">
+										<button id="privateBankingVideoButton" class="white-button" ng-disabled="(model.waitingCallsQueue['privateBanking']['video'] == 0)" ng-click="popAnswerWindow('privateBanking','video')">
+											<img src="images/VideoChatIcon.png" width="200" />
+										</button>
+									</td>
+									<td style="min-width: 202px; border: none">
+										<button id="privateBankingAudioButton" class="white-button" ng-disabled="(model.waitingCallsQueue['privateBanking']['audio'] == 0)" ng-click="popAnswerWindow('privateBanking','audio')">
+											<img src="images/AudioChatIcon.png" width="200" />
+										</button>
+									</td>
+									<td style="min-width: 202px; border: none">
+										<button id="privateBankingImButton" class="white-button" ng-disabled="(model.waitingCallsQueue['privateBanking']['im'] == 0)" ng-click="popAnswerWindow('privateBanking','im')">
+											<img src="images/ImChatIcon.png" width="200" />
+										</button>
+									</td>
+								</tr>
+								<tr style="background-color: #ffffff; border: none; height: 80px">
+									<td
+										style="font-size: 110px; color: #126fbe; min-width: 840px; border: none">&nbsp;</td>
+									<td style="font-size: 70px; color: #126fbe; text-align:center; min-width: 202px; border: none">{{model.waitingCallsQueue['privateBanking']['video']}}</td>
+									<td style="font-size: 70px; color: #126fbe; text-align:center; min-width: 202px; border: none">{{model.waitingCallsQueue['privateBanking']['audio']}}</td>
+									<td style="font-size: 70px; color: #126fbe; text-align:center; min-width: 202px; border: none">{{model.waitingCallsQueue['privateBanking']['im']}}</td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+					<tr>
+						<td style="background-color: #ffffff; border: none;">
+							<table style="border: 5px solid #126fbe">
+								<tr>
+									<td
+										style="font-size: 110px; color: #126fbe; min-width: 840px; border: none">
+										Tech Support</td>
+									<td style="min-width: 202px; border: none">
+										<button id="techSupportVideoButton" class="white-button" ng-disabled="(model.waitingCallsQueue['techSupport']['video'] == 0)" ng-click="popAnswerWindow('techSupport','video')">
+											<img src="images/VideoChatIcon.png" width="200" />
+										</button>
+									</td>
+									<td style="min-width: 202px; border: none">
+										<button id="techSupportAudioButton" class="white-button" ng-disabled="(model.waitingCallsQueue['techSupport']['audio'] == 0)" ng-click="popAnswerWindow('techSupport','audio')">
+											<img src="images/AudioChatIcon.png" width="200" />
+										</button>
+									</td>
+									<td style="min-width: 202px; border: none">
+										<button id="techSupportImButton" class="white-button" ng-disabled="(model.waitingCallsQueue['techSupport']['im'] == 0)" ng-click="popAnswerWindow('techSupport','im')">
+											<img src="images/ImChatIcon.png" width="200" />
+										</button>
+									</td>
+								</tr>
+								<tr style="background-color: #ffffff; border: none; height: 80px">
+									<td
+										style="font-size: 110px; color: #126fbe; min-width: 840px; border: none">&nbsp;</td>
+									<td style="font-size: 70px; color: #126fbe; text-align:center; min-width: 202px; border: none">{{model.waitingCallsQueue['techSupport']['video']}}</td>
+									<td style="font-size: 70px; color: #126fbe; text-align:center; min-width: 202px; border: none">{{model.waitingCallsQueue['techSupport']['audio']}}</td>
+									<td style="font-size: 70px; color: #126fbe; text-align:center; min-width: 202px; border: none">{{model.waitingCallsQueue['techSupport']['im']}}</td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+				</table>
+			</td>
+		</tr>
+	</table>
+
+</body>
+</html>

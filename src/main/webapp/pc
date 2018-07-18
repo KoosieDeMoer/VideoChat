@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<link rel="stylesheet"
+	href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" />
+<link rel='stylesheet'
+	href='//cdn.jsdelivr.net/foundation/5.0.2/css/foundation.min.css' />
+<!-- Font Awesome icons (Bootstrap, Foundation, and jQueryUI also supported) -->
+<link rel='stylesheet'
+	href='//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.0.3/css/font-awesome.css' />
+<title>WebRTC Device Emulator</title>
+<script
+	src="//ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+<script
+	src="//ajax.googleapis.com/ajax/libs/jqueryui/1.12.0/jquery-ui.min.js"></script>
+<script
+	src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+<script src="angular/angular.js"></script>
+<script src="js/main.controller.js"></script>
+<script src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
+<script src="js/fetch.js"></script>
+<script src="js/nextRTC.js"></script>
+<script src="js/nextRTCIF.js"></script>
+<script src="js/main.js"></script>
+
+<script src="/js/sockjs.min.js"></script>
+<script src="/js/stomp.min.js"></script>
+
+<script>
+	mode = CALL_MODE;
+</script>
+<link rel="stylesheet" href="styles/style.css" />
+<link rel="stylesheet" href="styles/main.css" />
+<style>
+body {
+	background-image: url("../images/iphone7plus_black.png");
+	background-repeat: no-repeat;
+	width: 970px;
+	height: 1400px;
+	padding: 420px 160px 420px 160px;
+	background-size: 690px 1420px;
+	transform: scale(0.35);
+    transform-origin: 0 0;
+   -moz-transform: scale(0.35, 0.35);
+   zoom: 0.62;
+   zoom: 62%;
+
+}
+
+@media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
+ body { background-size: 428px 880px;}
+ }
+ 
+#chat-page ul li {
+	line-height: 5rem;
+	padding: 10px 20px;
+	margin: 100;
+	border-bottom: 1px solid #f4f4f4;
+	font-size: 144px;
+}
+
+#chat-page p {
+	font-size: 100px; } #chat-page .chat-message i {
+	position: absolute;
+	width: 140px;
+	height: 140px;
+	overflow: hidden;
+	left: -120px;
+	display: inline-block;
+	vertical-align: sub; font-size : 144px;
+	line-height: 142px;
+	color: #fff;
+	text-align: center;
+	border-radius: 50%;
+	font-style: normal;
+	text-transform: uppercase;
+	font-size: 144px;
+}
+</style>
+</head>
+<body ng-app="MainModule" ng-controller="MainController">
+	<div class="logo"></div>
+	<div class="error-box" ng-if="errorMessage"
+		ng-mouseover="showPopover()" ng-mouseleave="hidePopover()">{{
+		errorMessage.message }}</div>
+	<div class="popover" ng-show="popoverIsVisible">
+		<pre>{{ errorMessage.developerMessage }}</pre>
+	</div>
+
+	<table>
+		<tr>
+			<td style="font-size: 110px; color: #126fbe; min-width: 760px; border: none;">Name</td>
+			<td style="font-size: 90px; min-width: 760px; background-color: #ffffff; border: none;">&nbsp;&nbsp;&nbsp;&nbsp;<input
+				id="input1" style="width: 560px;" /></td>
+		</tr>
+		</table>
+		<table>
+		<tr>
+			<td colspan="2" id="callButtons" style="background-color: #ffffff; border: none;">
+				<table>
+					<tr>
+						<td style="background-color: #ffffff; border: none;">
+							<table style="border: 5px solid #126fbe">
+								<tr>
+									<td
+										style="font-size: 110px; color: #126fbe; min-width: 840px; border: none">Information</td>
+									<td style="min-width: 202px; border: none">
+										<button id="infoVideoButton" class="white-button">
+											<img src="images/VideoChatIcon.png" width="200" />
+										</button>
+									</td>
+									<td style="min-width: 202px; border: none">
+										<button id="infoAudioButton" class="white-button">
+											<img src="images/AudioChatIcon.png" width="200" />
+										</button>
+									</td>
+									<td style="min-width: 202px; border: none">
+										<button id="infoImButton" class="white-button">
+											<img src="images/ImChatIcon.png" width="200" />
+										</button>
+									</td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+					<tr>
+						<td style="background-color: #ffffff; border: none;">
+							<table style="border: 5px solid #126fbe">
+								<tr>
+									<td
+										style="font-size: 110px; color: #126fbe; min-width: 840px; border: none">Private
+										Banking</td>
+									<td style="min-width: 202px; border: none">
+										<button id="privateBankingVideoButton" class="white-button">
+											<img src="images/VideoChatIcon.png" width="200" />
+										</button>
+									</td>
+									<td style="min-width: 202px; border: none">
+										<button id="privateBankingAudioButton" class="white-button">
+											<img src="images/AudioChatIcon.png" width="200" />
+										</button>
+									</td>
+									<td style="min-width: 202px; border: none">
+										<button id="privateBankingImButton" class="white-button">
+											<img src="images/ImChatIcon.png" width="200" />
+										</button>
+									</td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+					<tr>
+						<td style="background-color: #ffffff; border: none;">
+							<table style="border: 5px solid #126fbe">
+								<tr>
+									<td
+										style="font-size: 110px; color: #126fbe; min-width: 840px; border: none">
+										Tech Support</td>
+									<td style="min-width: 202px; border: none">
+										<button id="techSupportVideoButton" class="white-button">
+											<img src="images/VideoChatIcon.png" width="200" />
+										</button>
+									</td>
+									<td style="min-width: 202px; border: none">
+										<button id="techSupportAudioButton" class="white-button">
+											<img src="images/AudioChatIcon.png" width="200" />
+										</button>
+									</td>
+									<td style="min-width: 202px; border: none">
+										<button id="techSupportImButton" class="white-button">
+											<img src="images/ImChatIcon.png" width="200" />
+										</button>
+									</td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+				</table>
+			</td>
+		</tr>
+		</table>
+		<table>
+		<tr>
+			<td id="hangupButtons"
+				style="display: none; ">
+				<button id="hangupButton" style="font-size: 110px;">Hang Up</button>
+
+			</td>
+		</tr>
+
+		<tr>
+			<td style="min-width: 1600px; background-color: #ffffff; border: none;"><div id="container" class="jumbotron"
+					style="display: none;"></div></td>
+		</tr>
+		<tr style="height: 1800px; background-color: #ffffff; border: none;">
+			<td style="vertical-align: bottom; border: none;">
+				<div id="chat-page" style="display: none;">
+					<div class="chat-container">
+						<div class="connecting" style="font-size: 110px;">Connecting...</div>
+						<ul id="messageArea" style="overflow: scroll; height: 1800px;">
+
+						</ul>
+						<form id="messageForm" name="messageForm" nameForm="messageForm">
+							<div class="form-group">
+								<div class="input-group clearfix">
+									<input type="text" id="message"
+										style="font-size: 110px; height: 110px;"
+										placeholder="Type a message..." autocomplete="off"
+										class="form-control" />
+									<button type="submit" style="font-size: 110px;">Send</button>
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+
+			</td>
+		</tr>
+	</table>
+
+
+	<div style="display: none">
+		<video id="templateOutgoing" width="320" height="240" autoplay
+			controls></video>
+		<video id="templateIncoming" width="960" height="720" autoplay
+			controls></video>
+	</div>
+	<!-- Modal - video -->
+	<div id="myVideoModal" class="modal fade" role="dialog">
+		<div class="modal-dialog">
+
+			<!-- Modal content-->
+			<div class="modal-content" style="min-width: 900px">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+					<h4 class="modal-title" style="font-size: 110px;">Please enter PIN</h4>
+				</div>
+				<div class="modal-body">
+					<input type="text" id="message"
+						style="font-size: 110px; height: 110px;"
+						placeholder="PIN." autocomplete="off"
+						class="form-control" />
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn" data-dismiss="modal" style="font-size: 110px;">Back</button>
+					<button type="button" id="pinSubmitVideoButton" class="btn btn-default" data-dismiss="modal" style="font-size: 110px;">OK</button>
+				</div>
+			</div>
+
+		</div>
+	</div>
+<!-- Modal - audio -->
+	<div id="myAudioModal" class="modal fade" role="dialog">
+		<div class="modal-dialog">
+
+			<!-- Modal content-->
+			<div class="modal-content" style="min-width: 900px">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+					<h4 class="modal-title" style="font-size: 110px;">Please enter PIN</h4>
+				</div>
+				<div class="modal-body">
+					<input type="text" id="message"
+						style="font-size: 110px; height: 110px;"
+						placeholder="PIN." autocomplete="off"
+						class="form-control" />
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn" data-dismiss="modal" style="font-size: 110px;">Back</button>
+					<button type="button" id="pinSubmitAudioButton" class="btn btn-default" data-dismiss="modal" style="font-size: 110px;">OK</button>
+				</div>
+			</div>
+
+		</div>
+	</div>
+<!-- Modal - IM-->
+	<div id="myImModal" class="modal fade" role="dialog">
+		<div class="modal-dialog">
+
+			<!-- Modal content-->
+			<div class="modal-content" style="min-width: 900px">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+					<h4 class="modal-title" style="font-size: 110px;">Please enter PIN</h4>
+				</div>
+				<div class="modal-body">
+					<input type="text" id="message"
+						style="font-size: 110px; height: 110px;"
+						placeholder="PIN." autocomplete="off"
+						class="form-control" />
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn" data-dismiss="modal" style="font-size: 110px;">Back</button>
+					<button type="button" id="pinSubmitImButton" class="btn btn-default" data-dismiss="modal" style="font-size: 110px;">OK</button>
+				</div>
+			</div>
+
+		</div>
+	</div>
+
+	<script src="js/main.js"></script>
+	<script src="js/main_im.js"></script>
+</body>
+</html>

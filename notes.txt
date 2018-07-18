@@ -1,0 +1,23 @@
+Edge issues
+
+TL;DR
+If someone can locates a demo site where Edge can make a demo call answered by Chrome then I can try to use that as a basis.
+
+
+
+IM example app works - herokuapp
+
+Std github WebRTC (single page) works
+ 
+WebRTC example app does not - hits and issue that I have removed from our code: rtcpMuxPolicy 'negotiate' is not supported. 
+
+WebSockets probably ok - IM app works and Chrome peer is signalled that Edge peer has joined
+
+Note: the simplewebrtc.com site (which is linked too from https://developer.microsoft.com/en-us/microsoft-edge/testdrive/demos/simplewebrtc/) specifically mentions that only their audio demo works on edge (tested - works but slow setup??) - implication is video does not work - tested (it doesn't)
+
+Note 2: talky.io doesn't work - not even the chat - message receipt causes "includes" js error (basic polyfill missing)
+
+Note 3: the ice trickle test fails - hits js error before actually requesting candidates
+
+Possibilities:
+Lack of cert on local instance - try upload to rtcdemo.e

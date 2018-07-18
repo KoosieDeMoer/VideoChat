@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<link rel="stylesheet"
+	href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" />
+<link rel='stylesheet'
+	href='//cdn.jsdelivr.net/foundation/5.0.2/css/foundation.min.css' />
+<!-- Font Awesome icons (Bootstrap, Foundation, and jQueryUI also supported) -->
+<link rel='stylesheet'
+	href='//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.0.3/css/font-awesome.css' />
+<title>WebRTC Answer</title>
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.0/jquery-ui.min.js"></script>
+<script
+	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+<script src="angular/angular.js"></script>
+<script src="js/main.controller.js"></script>
+<script src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
+<script src="js/url-search-params.max.js"></script>
+<script src="js/fetch.js"></script>
+<script src="js/nextRTC.js"></script>
+<script src="js/nextRTCIF.js"></script>
+<script src="js/main.js"></script>
+
+<script src="/js/sockjs.min.js"></script>
+<script src="/js/stomp.min.js"></script>
+
+<script>
+	mode = ANSWER_MODE;
+</script>
+<link rel="stylesheet" href="styles/style.css" />
+<link rel="stylesheet" href="styles/main.css" />
+</head>
+<body ng-app="MainModule" ng-controller="MainController" ng-init="answerFirstCall()">
+	<div class="logo"></div>
+	<div class="error-box" ng-if="errorMessage"
+		ng-mouseover="showPopover()" ng-mouseleave="hidePopover()">{{
+		errorMessage.message }}</div>
+	<div class="popover" ng-show="popoverIsVisible">
+		<pre>{{ errorMessage.developerMessage }}</pre>
+	</div>
+
+	<table>
+	<tr>
+			<td style="font-size: 65px; color: #126fbe;">
+				<div id="waitingDiv" style="display: none;"><br/>
+					No calls in this queue. Waiting....
+				</div>
+				<div id="otherPartyDiv" style="display: none">
+					Caller name is <input id="input2" disabled style="width: 300px"/>
+				</div>
+			</td>
+		</tr>
+		<tr>
+			<td colspan="2"><div id="container" class="jumbotron"
+					style="display: none"></div></td>
+		</tr>
+		<tr>
+			<td colspan="2" style="vertical-align:bottom;">
+				<div id="chat-page" style="display: none;">
+					<div class="chat-container">
+						<div class="connecting">Connecting...</div>
+						<ul id="messageArea">
+
+						</ul>
+						<form id="messageForm" name="messageForm" nameForm="messageForm">
+							<div class="form-group">
+								<div class="input-group clearfix">
+									<input type="text" id="message" placeholder="Type a message..."
+										autocomplete="off" class="form-control" />
+									<button type="submit" class="primary">Send</button>
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+			</td>
+		</tr>
+	</table>
+
+	<div id="buttons">
+		<div id="hangupButtons" style="display:none;">
+			<button id="hangupButton" style="font-size: 70px;">Hang Up</button>
+		</div>
+	</div>
+
+	<div style="display: none">
+		<video id="templateOutgoing" width="320" height="240" autoplay
+			controls></video>
+		<video id="templateIncoming" width="960" height="720" autoplay
+			controls></video>
+	</div>
+	<script src="js/main.js"></script>
+	<script src="js/main_im.js"></script>
+
+
+</body>
+</html>
